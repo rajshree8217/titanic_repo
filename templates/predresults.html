@@ -1,0 +1,41 @@
+
+<form name="predresults" method="POST" action="{{ url_for('predform') }}">
+  <h1><center>Titanic Survival Predictions for new data</center></h1><br><br>
+            <table border="1">
+<!--The names below are displayed as table headers/labels-->
+                <tr>
+                    <th>Passenger ID:</th>
+                    <th>Passenger Class:</th>
+                    <th>Name:</th>
+                    <th>Sex:</th>
+					<th>Age:</th>
+					<th>Sibling/spouse:</th>
+					<th>Parent/child:</th>
+					<th>Ticket #:</th>
+					<th>Fare Price:</th>
+					<th>Cabin #:</th>
+					<th>Port Embarked:</th>
+					<th>Prediction Made:</th>
+                </tr>
+<!--The names below have to match the new_df column names exactly-->
+            {% for index, row in data.iterrows() %}
+                <tr>
+                        <td>{{ row['PassengerId'] | int }}</td>
+                        <td>{{ row['Pclass'] | int }}</td>
+                        <td>{{ row['Name'] }}</td>
+                        <td>{{ row['Sex'] }}</td>
+						<td>{{ row['Age'] | int}}</td>
+						<td>{{ row['SibSp'] | int}}</td>
+						<td>{{ row['Parch'] |int}}</td>
+						<td>{{ row['Ticket'] }}</td>
+						<td>{{ row['Fare'] }}</td>
+						<td>{{ row['Cabin'] }}</td>
+						<td>{{ row['Embarked'] }}</td>
+						<td>{{ row['Prediction'] }}</td>
+                </tr>
+            {% endfor %}
+            </table>
+        <br>
+	<label>Use the trained Model:</label>
+   <input type="submit" value="Use Model">
+</form>

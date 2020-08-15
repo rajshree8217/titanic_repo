@@ -1,0 +1,9 @@
+<form name="predform" method="POST" enctype="multipart/form-data" action="{{ url_for('make_pred') }}">
+  <h1><center>Titanic Survival Predictions - Load new data from file</center></h1><br><br>
+  <label>Select a .csv file to USE model :</label>
+  <input type="file" name="newdata" accept=".csv" required><br><br>
+  <input type="submit" value="Submit" >
+  {% if errstr %}
+	<p class=error><strong>Error:</strong> {{ errstr }}
+  {% endif %}
+</form>

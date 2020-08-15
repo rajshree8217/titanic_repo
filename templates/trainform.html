@@ -1,0 +1,9 @@
+<form name="trainform" method="POST" enctype="multipart/form-data" action="{{ url_for('train') }}">
+  <h1><center>Titanic Survival Train Model</center></h1><br><br>
+  <label>Select a .csv file to TRAIN/BUILD model:</label>
+  <input type="file" name="traindata" accept=".csv" required><br><br>
+  <input type="submit" value="Submit" ><br><br>
+  {% if errstr %}
+	<p class=error><strong>Error:</strong> {{ errstr }}
+  {% endif %}
+</form>
