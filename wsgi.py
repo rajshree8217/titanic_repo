@@ -589,7 +589,7 @@ if __name__ == "__main__":
     # Run the flask app in jupyter noetbook needs run_simple 
     # Run the flask app in python script needs app.run
 #     run_simple('localhost',5000, app, use_debugger=True)
-    application.run('0.0.0.0',debug=True)
+    application.run('localhost',debug=True)
 
      
 else:
