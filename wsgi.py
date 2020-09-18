@@ -14,6 +14,10 @@ import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
 
+# Add in Week 3
+# for graphical output to df.head and df.describe from within a function, use display NOT print
+from IPython.display import display  
+
 
 # Feature Engineering
 import feature_engine.categorical_encoders as ce
@@ -37,8 +41,8 @@ warnings.simplefilter("ignore")
 np.set_printoptions(precision=4, suppress=True, floatmode='fixed')
 
 # Display options on terminal for pandas dataframes
-pd.options.display.max_columns = 20
-pd.options.display.max_rows = 1000
+pd.options.display.max_columns = None
+pd.options.display.max_rows = None
 
 # global variables available to all functions in this python file
 TRAINED_MODEL = 0
@@ -55,16 +59,16 @@ TO_DROP = []
 
 
 def read_data(filename):
-    print("\n*****FUNCTION read_data")
+    print("\n*****FUNCTION read_data*****")
     
     # Read the data file into a df
     df = pd.read_csv(os.path.join(application.config['UPLOAD_FOLDER'],filename))
     
     # See the data in the df
-    print(df.head())    
+    display(df.head())
     
     # Full data set Shape
-    print("\nShape of Full set:")
+    print("Shape of Full set:")
     print(df.shape)
        
     return(df)
@@ -77,7 +81,7 @@ def read_data(filename):
 
 
 def disp_df_info(df):
-    print("\n*****FUNCTION disp_df_info")
+    print("\n*****FUNCTION disp_df_info*****")
     
     # Create a Pie Chart to check Balance
     df['Survived'].value_counts(sort=True)
@@ -96,27 +100,27 @@ def disp_df_info(df):
     
     
     # display column Headers
-    print("\nColumn Headers:")
+    print("Column Headers:")
     print(df.columns)
           
     # print first 10 data samples
-    print("\nTop 10 rows:")
-    print(df.head(10))
+    print("Top 10 rows:")
+    display(df.head(10))
     
     #Describe the df to check if features need scaling
-    print("\nStatistics:")
-    print(df.describe())
+    print("Statistics:")
+    display(df.describe())
     
     # Identify the Categorical Vars and identify nulls
-    print("\nInformation:")
+    print("Information:")
     print(df.info())
     
     # Count Nulls 
-    print("\nNull Count:")
+    print("Null Count:")
     print(df.isnull().sum())
     
     # Percent of Nulls
-    print ("\nNull Percent:") 
+    print("Null Percent:") 
     print(df.isnull().mean())
     
     # Age has 20% Nulls - Plot Histogram of Age to see distribution in order to decide imputation method
@@ -142,25 +146,25 @@ def disp_df_info(df):
 
 
 def data_cleaning(df_input):
-    print("\n*****FUNCTION data_cleaning")
+    print("\n*****FUNCTION data_cleaning*****")
     
     df = df_input.copy(deep=True)
     
     # Print Shape
-    print("\nShape Before Dropping rows and columns:", df.shape)
+    print("Shape Before Dropping rows and columns:", df.shape)
     
     # Drop unwanted columns
     df.drop(['PassengerId','Name','Ticket','Cabin'], axis=1, inplace=True)
-    df.head(10)
+    display(df.head(10))
     
     # Drop rows with Nulls using df.dropna(), will drop over 20% data
     # Embarked has 2 nulls, OK to drop rows with a low number of Nulls
     df = df[df['Embarked'].notnull()]
-    print ("\nNull Percent after dropping rows:") 
+    print("Null Percent after dropping rows:") 
     print(df.isnull().mean())
       
     # Print Shape
-    print("\nShape After Dropping rows and columns:", df.shape)
+    print("Shape After Dropping rows and columns:", df.shape)
     
     return(df)
     # end of functiom clean_data    
@@ -172,19 +176,19 @@ def data_cleaning(df_input):
 
 
 def data_split(df_input):
-    print("\n*****FUNCTION data_split")
+    print("\n*****FUNCTION data_split*****")
     
     df = df_input.copy(deep=True)
     
     # Create Y var
     y = df['Survived']
-    print('\nY/Target Var:')
-    print(y.head(10))
+    print("Y/Target Var:")
+    display(y.head(10))
 
     # Create X var
     x = df.drop(['Survived'], axis=1)
-    print('\nX/Feature Var:')
-    print(x.head(10))
+    print("X/Feature Var:")
+    display(x.head(10))
     
     return(x,y)
 # end of function data_split
@@ -196,7 +200,7 @@ def data_split(df_input):
 
 
 def feature_engineering(x_input):
-    print("\n*****FUNCTION feature_engineering")
+    print("\n*****FUNCTION feature_engineering*****")
 
     x = x_input.copy(deep=True)
     global MEDIAN_IMPUTER
@@ -218,12 +222,12 @@ def feature_engineering(x_input):
     print(OHCE.encoder_dict_)
         
     # Transformed df - No Nulls after imputation
-    print("\nNull Count after Missing Data Imputation:")
+    print("Null Count after Missing Data Imputation:")
     print(x.isnull().sum())
 
     # Transformed df - dummy vars created
-    print("\nDummy Variables after OHE:")
-    print(x.head())
+    print("Dummy Variables after OHE:")
+    display(x.head())
 
     return(x)
 # end of feature_engineering function
@@ -235,7 +239,7 @@ def feature_engineering(x_input):
 
 
 def feature_selection(x_input):
-    print("\n*****FUNCTION feature_selection")
+    print("\n*****FUNCTION feature_selection*****")
     
     x = x_input.copy(deep=True)
 
@@ -245,7 +249,7 @@ def feature_selection(x_input):
     corr_mat = x.corr()
 
     # Correlation Matrix visualized as Heatmap
-    print("\nCorrelation Martix for X/Feature Space:")
+    print("Correlation Martix for X/Feature Space:")
     plt.figure(figsize=(8,8))
     sns.heatmap(corr_mat, annot= True, cmap='coolwarm', center = 0 , vmin=-1, vmax=1)
     plt.show()
@@ -260,16 +264,16 @@ def feature_selection(x_input):
 
     # Find index of feature columns with correlation greater than a user set value 
     TO_DROP = [column for column in upper.columns if any(upper[column] > 0.70)]
-    print('\nFeatures to Drop:',TO_DROP)
+    print("Features to Drop:",TO_DROP)
 
     # Shape before dropping features
-    print('\nShape BEFORE Dropping features:', x.shape)
+    print("Shape BEFORE Dropping features:", x.shape)
 
     # Drop features
     x.drop(x[TO_DROP], axis=1, inplace=True)
 
     # Shape after dropping features
-    print('\nShape AFTER Dropping features:', x.shape)
+    print("Shape AFTER Dropping features:", x.shape)
 
     return(x)
 # end of feature_selection function
@@ -281,7 +285,7 @@ def feature_selection(x_input):
 
 
 def feature_scaling(x_input):
-    print("\n*****FUNCTION feature_scaling")
+    print("\n*****FUNCTION feature_scaling*****")
 
     global SCALER
     global TO_SCALE
@@ -310,7 +314,7 @@ def feature_scaling(x_input):
 
 
 def build_logreg_model(x_input, y_input):
-    print("\n*****FUNCTION build_logreg_model")
+    print("\n*****FUNCTION build_logreg_model*****")
 
     x = x_input.copy(deep=True)
     y = y_input.copy(deep=True)
@@ -330,17 +334,17 @@ def build_logreg_model(x_input, y_input):
 
     # probability of being 0, 1 in binary clasification , threshold is .5
     y_prob=mod.predict_proba(x)
-    print('\nProbabilities:',y_prob)
+    print('Probabilities:',y_prob)
    
     # probability converted to predictions
     y_pred = mod.predict(x)
-    print('\nPredictions:',y_pred)
+    print('Predictions:',y_pred)
    
     #################### Model Metrics ####################
 
     # Confusion Matrix gives the mistakes made by the classifier
     cm =confusion_matrix(y, y_pred)
-    print('\nConfusion Matrix:')
+    print('Confusion Matrix:')
     print(cm)
 
     # Confusion Matrix visualized
@@ -522,22 +526,22 @@ def make_pred():
 
     # Call fx data_cleaning
     clean_x = data_cleaning(new_df) 
-    print('\nNew Cleaned Data:',clean_x)
+    print('New Cleaned Data:',clean_x)
     
     # Feature Eng - Reuse the MEDIAN_IMPUTER
     print(MEDIAN_IMPUTER.imputer_dict_)
     new_x = MEDIAN_IMPUTER.transform(clean_x)
-    print('\nNew FE Data:',new_x)
+    print('New FE Data:',new_x)
 
     # Feature Eng - Reuse the OHCE
     print(OHCE.encoder_dict_)
     new_x = OHCE.transform(new_x)
-    print('\nNew FE Data:',new_x)
+    print('New FE Data:',new_x)
 
     #Feature Selection - Reuse TO_DROP
     #Drop the redundant features
     new_x.drop(new_x[TO_DROP], axis=1, inplace=True)
-    print('\nNew Selected Data:',new_x)
+    print('New Selected Data:',new_x)
 
     # Feature Scale - Reuse SCALER, TO_SCALE
     dftoscale = new_x[TO_SCALE]
@@ -547,11 +551,11 @@ def make_pred():
 
     # put the scaled back into original
     new_x[TO_SCALE]=dftoscale
-    print('\nNew Scaled Data:', new_x)
+    print('New Scaled Data:', new_x)
 
     # Make Prediction - Reuse MODEL to make prediction
     new_pred = TRAINED_MODEL.predict(new_x)
-    print('\nNew Prediction:',new_pred)
+    print('New Prediction:',new_pred)
 
     # new_pred is a np array in a row, transpose to column in order to join with original data frame
     new_pred = np.transpose(new_pred)
@@ -564,7 +568,7 @@ def make_pred():
     # Save results to file on server without index
     new_df.to_csv(os.path.join(application.config['UPLOAD_FOLDER'],'result_'+ name),index=False)
 
-    print("\n*************************** New Prediction Complete WITH FLASK ***************************************")
+    print("*************************** New Prediction Complete WITH FLASK ***************************************")
 
     # Return results to browser/client render_template OR send_file , http does NOT allow both.
     # return render_template('predresults.html',data=new_df)
@@ -576,20 +580,20 @@ def make_pred():
 
 # #### Main Program for Web App
 
-# In[20]:
+# In[ ]:
 
 
 # Main Program for Web app
 # If __name__ = __main__ ,program is running standalone
 if __name__ == "__main__":
-    print("Python script is run standalone\n")
+    print("Python script is run standalone")
     print("Python special variable __name__ =", __name__)   
         
        
     # Run the flask app in jupyter noetbook needs run_simple 
     # Run the flask app in python script needs app.run
 #     run_simple('localhost',5000, app, use_debugger=True)
-    application.run('localhost',debug=True)
+    application.run('0.0.0.0',debug=True)
 
      
 else:
