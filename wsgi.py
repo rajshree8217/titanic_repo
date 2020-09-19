@@ -493,7 +493,7 @@ def train():
 
 # Use model on trainresults.html
 # OR Use model on predresults.html
-@application.route("/predform", methods=['POST'])
+@application.route("/predform", methods=['POST','GET'])
 def predform():
     return render_template('predform.html')
 # end of home
