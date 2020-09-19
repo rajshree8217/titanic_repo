@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# ####  Week 3 - Functions
+# ####  Week 8 - Functions
 
 # In[1]:
 
@@ -292,8 +292,10 @@ def feature_scaling(x_input):
 
     x = x_input.copy(deep=True)
 
-    # Choose columns to scale, create a separate df
+    # Create a list of columns to scale
     TO_SCALE = ['Pclass', 'Age', 'SibSp', 'Parch', 'Fare']
+    
+    # Create a separate df of columns to scale
     dftoscale = x[TO_SCALE]
     
     # Call scaler to scale the df
@@ -340,7 +342,7 @@ def build_logreg_model(x_input, y_input):
     y_pred = mod.predict(x)
     print('Predictions:',y_pred)
    
-    #################### Model Metrics ####################
+    #### Model Metrics 
 
     # Confusion Matrix gives the mistakes made by the classifier
     cm =confusion_matrix(y, y_pred)
@@ -395,7 +397,7 @@ def build_logreg_model(x_input, y_input):
 # end of build_logreg_model function
 
 
-# #### Week 4 - Flask
+# #### Week 9 - Flask
 
 # In[11]:
 
@@ -526,22 +528,26 @@ def make_pred():
 
     # Call fx data_cleaning
     clean_x = data_cleaning(new_df) 
-    print('New Cleaned Data:',clean_x)
+    print('New Cleaned Data:')
+    display(clean_x.head())
     
     # Feature Eng - Reuse the MEDIAN_IMPUTER
     print(MEDIAN_IMPUTER.imputer_dict_)
     new_x = MEDIAN_IMPUTER.transform(clean_x)
-    print('New FE Data:',new_x)
+    print('New FE Data:')
+    display(new_x.head())
 
     # Feature Eng - Reuse the OHCE
     print(OHCE.encoder_dict_)
     new_x = OHCE.transform(new_x)
-    print('New FE Data:',new_x)
+    print('New FE Data:')
+    display(new_x.head())
 
     #Feature Selection - Reuse TO_DROP
     #Drop the redundant features
     new_x.drop(new_x[TO_DROP], axis=1, inplace=True)
-    print('New Selected Data:',new_x)
+    print('New Selected Data:')
+    display(new_x.head())
 
     # Feature Scale - Reuse SCALER, TO_SCALE
     dftoscale = new_x[TO_SCALE]
@@ -551,7 +557,8 @@ def make_pred():
 
     # put the scaled back into original
     new_x[TO_SCALE]=dftoscale
-    print('New Scaled Data:', new_x)
+    print('New Scaled Data:')
+    display(new_x.head())
 
     # Make Prediction - Reuse MODEL to make prediction
     new_pred = TRAINED_MODEL.predict(new_x)
@@ -570,7 +577,7 @@ def make_pred():
 
     print("*************************** New Prediction Complete WITH FLASK ***************************************")
 
-    # Return results to browser/client render_template OR send_file , http does NOT allow both.
+    # Return results to browser/client, render_template OR send_file , http does NOT allow both.
     # return render_template('predresults.html',data=new_df)
     return(send_file(os.path.join(application.config['UPLOAD_FOLDER'],'result_'+ name),as_attachment=True))
 
@@ -580,7 +587,7 @@ def make_pred():
 
 # #### Main Program for Web App
 
-# In[ ]:
+# In[20]:
 
 
 # Main Program for Web app
