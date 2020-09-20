@@ -445,8 +445,8 @@ application.config['UPLOAD_FOLDER'] = upload_folder_path
 
 
 # home displays trainform.html
-@application.route("/home", methods=['GET'])
-def home():
+@application.route("/train", methods=['GET'])
+def train():
     return render_template('trainform.html')
 # end of home
 
@@ -455,8 +455,8 @@ def home():
 
 
 # submit on trainform.html
-@application.route("/train", methods=['POST'])
-def train():
+@application.route("/build_mod", methods=['POST'])
+def build_mod():
     
     global TRAINED_MODEL
     
@@ -493,8 +493,8 @@ def train():
 
 # Use model on trainresults.html
 # OR Use model on predresults.html
-@application.route("/predform", methods=['POST','GET'])
-def predform():
+@application.route("/use", methods=['POST','GET'])
+def use():
     return render_template('predform.html')
 # end of home
 
@@ -578,7 +578,7 @@ def make_pred():
     print("*************************** New Prediction Complete WITH FLASK ***************************************")
 
     # Return results to browser/client, render_template OR send_file , http does NOT allow both.
-    # return render_template('predresults.html',data=new_df)
+#     return render_template('predresults.html',data=new_df)
     return(send_file(os.path.join(application.config['UPLOAD_FOLDER'],'result_'+ name),as_attachment=True))
 
 
@@ -587,7 +587,7 @@ def make_pred():
 
 # #### Main Program for Web App
 
-# In[20]:
+# In[ ]:
 
 
 # Main Program for Web app
@@ -600,7 +600,7 @@ if __name__ == "__main__":
     # Run the flask app in jupyter noetbook needs run_simple 
     # Run the flask app in python script needs app.run
 #     run_simple('localhost',5000, app, use_debugger=True)
-    application.run('0.0.0.0',debug=True)
+    application.run("0.0.0.0",debug=True)
 
      
 else:
