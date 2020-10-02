@@ -506,7 +506,7 @@ def use():
 @application.route("/make_pred", methods=['POST'])
 def make_pred():
     
-    global MEDIAN_IMPUTER
+    
     
     file_obj = request.files.get('newdata')
     print("Type of the file is :", type(file_obj))
